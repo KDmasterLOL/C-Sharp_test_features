@@ -45,40 +45,6 @@ class StackLinkedNode<T> : IEnumerable
 
     public IEnumerator GetEnumerator() => new LinkedNodeEnumerator<T>(_node);
 }
-public class LinkedList<T> : IEnumerable
-{
-    private int _count = 0;
-    public LinkedListNode<T> Head { get; private set; }
-    public LinkedListNode<T> Tail { get; private set; }
-
-    public LinkedList(params T[] items)
-    {
-        if (items.Length == 0) return;
-        Add(items);
-    }
-    public void Add(T value)
-    {
-        if (_count == 0)
-            Tail = Head = new LinkedListNode<T>(value);
-        else
-        {
-            var node = new LinkedListNode<T>(value) { Next = Head };
-            Head = node;
-        }
-        ++_count;
-    }
-    public void Add(params T[] values)
-    {
-        foreach (var value in values)
-            Add(value);
-    }
-
-    public IEnumerator GetEnumerator()
-    {
-        return new LinkedNodeEnumerator<T>(Head);
-    }
-
-}
 
 public class LinkedListNode<T>
 {
@@ -117,6 +83,11 @@ public class SimpleArrayQueue<T>
     public bool IsFull => _size == _front - 1;
     public bool IsEmpty => _rear == 0;
 
+    public T Rear
+    {
+        set => _items[_rear++] = value;
+    }
+
     public T Front
     {
         get
@@ -133,6 +104,110 @@ public class SimpleArrayQueue<T>
         _items = new T[_size];
     }
 
-    public void Enqueue(T item) => _items[_rear++] = item;
-    public T Dequeue() => Front;
+    public void Push(T item) => Rear = item;
+    public T Pop() => Front;
+}
+
+class SimpleNodeQueue<T>
+{
+    private int _length = 0;
+    private QueueNode _frontNode, _rearNode;
+
+    class QueueNode
+    {
+        public QueueNode next_node;
+        public T Value { get; }
+
+        public QueueNode(T value) => Value = value;
+    }
+
+    public T Front
+    {
+        get
+        {
+            var value = _frontNode.Value;
+            _frontNode = _frontNode.next_node;
+            return value;
+        }
+    }
+
+    public void Push(T value)
+    {
+        _frontNode = new QueueNode(value);
+        if (_length == 0) _rearNode = _frontNode;
+
+        _length++;
+    }
+    public T Pop() => Front;
+}
+
+class CircularArrayQueue<T>
+{
+    private int _front = 0, _rear = 0, _size;
+    private T[] _items;
+
+    public CircularArrayQueue(int size = 10)
+    {
+        _size = size;
+        _items = new T[_size];
+    }
+    public T Rear
+    {
+        set
+        {
+            if (_rear + 1 == _front) throw new Exception();
+            _rear++;
+            if (_rear == _size) _rear = 0;
+            _items[_rear - 1] = value;
+        }
+    }
+    public T Front
+    {
+        get
+        {
+
+            if (_front == _rear) throw new Exception();
+            _front++;
+            if (_front == _size) _front = 0;
+            return _items[_front - 1];
+        }
+    }
+
+    public void Push(T item) => Rear = item;
+    public T Pop() => Front;
+}
+
+class LinkedList<T>
+{
+    class Node
+    {
+        public Node Next { get; set; }
+        public T Value { get; }
+
+        public Node(T value) => Value = value;
+    }
+
+    private Node _head, _tail;
+    private int _size = 0;
+    public void Push(T value)
+    {
+        if (_size == 0)
+            _head = _tail = new Node(value);
+        else
+        {
+            var last_head = _head;
+            _head = new Node(value);
+            _head.Next = last_head;
+        }
+        _size++;
+    }
+
+    public T Pop()
+    {
+        var value = _head.Value;
+        _head = _head.Next;
+        return value;
+    }
+
+    public T Peek() => _head.Value;
 }

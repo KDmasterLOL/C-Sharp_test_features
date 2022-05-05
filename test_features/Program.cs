@@ -4,7 +4,7 @@ class Program
 {
     static void Main(string[] args)
     {
-        test.Test.TestQueue();
+        test.TestAlgorithms.TestBinarySearch();
     }
     
 }
