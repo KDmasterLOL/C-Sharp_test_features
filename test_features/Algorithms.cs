@@ -1,36 +1,68 @@
 ﻿using System.Collections.Generic;
-namespace test;
+namespace test_features;
 
-class Algorithms
+static class Algorithms
 {
-    static public void BubbleSort<T>(in T[] array, bool debug = false) where T : IComparable<T>
+    static public class Sorting
     {
-        for (int step = 0; step < array.Length; step++)
+        static public void BubbleSort<T>(in T[] array, bool debug = false) where T : IComparable<T>
         {
-            bool is_change = false;
-            for (int index = 1; index < array.Length - step; index++)
+            for (int step = 0; step < array.Length; step++)
             {
-
-                int last_index = index - 1;
-                if (array[index].CompareTo(array[last_index]) > 0)
+                bool is_change = false;
+                for (int index = 1; index < array.Length - step; index++)
                 {
-                    (array[index], array[last_index]) = (array[last_index], array[index]);
-                    is_change = true;
+
+                    int last_index = index - 1;
+                    if (array[index].CompareTo(array[last_index]) > 0)
+                    {
+                        (array[index], array[last_index]) = (array[last_index], array[index]);
+                        is_change = true;
+                    }
                 }
+                if (debug)
+                {
+                    Write($"Iteration {step + 1} array - ");
+                    foreach (var num in array) Write($"{num} ");
+                    WriteLine();
+                }
+                if (!is_change) break;
             }
-            if (debug)
-            {
-                Write($"Iteration {step + 1} array - ");
-                foreach (var num in array) Write($"{num} ");
-                WriteLine();
-            }
-            if (!is_change) break;
         }
+        //static public T[] QuickSort<T>(T[] array) where T : IComparable<T>
+        //{
+        //    if (array.Length < 2) return array;
+
+        //    T pivot = array[0];
+        //    //for (int index = 0; index < array.Length; index++)
+        //    //{
+        //    //    if (index == pivot) continue;
+        //    //    switch (array[pivot].CompareTo(array[index]))
+        //    //    {
+        //    //        case 1:
+        //    //            var temp = array[pivot];
+        //    //            array[pivot] = array[index];
+        //    //            pivot++;
+        //    //            array[index] = array[pivot];
+        //    //            array[pivot] = temp;
+        //    //            break;
+        //    //    }
+        //    //}
+        //    //T[] ArrayLess = new T[pivot - 1], ArrayLarge = new T[array.Length - pivot - 1];
+        //    array.Where(item => item switch
+        //    {
+        //        -1 or 0 => true,
+        //        1 => false,
+        //    }
+        //    );
+        //    return
+        //}
     }
-    static public int BinarySearch<T>(in T[] array, T target, bool debug = false) where T : IComparable<T>
+    static public int BinarySearch<T>(in T[] array, T target, bool debug = true) where T : IComparable<T>
     {
-        int length, high, low = 0, mid = 0;
-        length = high = array.Length;
+        int high, low, mid;
+        high = array.Length - 1;
+        low = 0;
 
         if (debug) WriteLine($"Start binary search - array length({array.Length})");
 
@@ -40,10 +72,50 @@ class Algorithms
 
             if (debug) WriteLine($"Low - {low}\thigh - {high}\tmid - {mid}");
 
-            if (array[mid].CompareTo(target) == 0) return mid;
-            else if (array[mid].CompareTo(target) == -1) low = mid + 1;
-            else high = mid - 1;
+            switch (array[mid].CompareTo(target))
+            {
+                case 0:
+                    if (debug) WriteLine($"Element {target} was found at index {mid}");
+                    return mid;
+                case 1:
+                    high = mid - 1;
+                    break;
+                case -1:
+                    low = mid + 1;
+                    break;
+            }
         }
+        if (debug) WriteLine($"{target} not found in array({string.Join(" ", array)})");
         return -1;
+    }
+    static public void TowerOfHanoi()
+    {
+        /* 
+         * PseudoCode 4 disks:
+         * Move 1 on aux tower
+         * Move 2 on dest tower
+         * Move 1 on dest tower
+         * Move 3 on aux tower
+         * Move 1 on start tower
+         * Move 2 on aux tower
+         * Move 1 on aux tower
+         * Move 4 on dest tower
+         * Move 1 on dest tower
+         * Move 2 on start tower
+         * Move 1 on start tower
+         * Move 3 on dest tower
+         * Move 1 on aux tower
+         * Move 2 on dest tower
+         * Move 1 on dest tower
+         */
+
+    }
+    static public int EuclideanAlgorithm(int first, int second, bool debug = false)
+    {
+        var (max, min) = (Max(first, second), Min(first, second));
+        if (debug) WriteLine("max - {0}, min - {1}", max, min);
+        if (max % min == 0) return min;
+        if (max / min == 0) return 0;
+        return EuclideanAlgorithm(min, max % min, debug);
     }
 }

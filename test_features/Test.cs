@@ -1,4 +1,6 @@
-﻿namespace test;
+﻿namespace test_features;
+
+using DataStructure;
 
 static public class TestStructures
 {
@@ -22,7 +24,7 @@ static public class TestStructures
     }
     static public void TestLinkedList()
     {
-        var linkedList = new DataStructure.LinkedList<int>();
+        var linkedList = new DataStructure.SinglyLinkedList<int>();
 
         linkedList.Push(10);
         linkedList.Push(20);
@@ -33,7 +35,19 @@ static public class TestStructures
         WriteLine($"{linkedList.Pop()}");
         WriteLine($"{linkedList.Pop()}");
     }
-
+    static public void TestTraverseTree()
+    {
+        var values = new int[] { 2, 3, 5, 12, 20 };
+        var tree = new Tree<int>(10, true);
+        foreach (var val in values)
+            tree.Add(val);
+        WriteLine("InOrder Traverse");
+        TreeTraverse.InOrder(tree);
+        WriteLine("PreOrder Traverse");
+        TreeTraverse.PreOrder(tree);
+        WriteLine("PostOrder Traverse");
+        TreeTraverse.PostOrder(tree);
+    }
 }
 
 static public class TestAlgorithms
@@ -41,6 +55,35 @@ static public class TestAlgorithms
     static public void TestBinarySearch()
     {
         int[] array = new int[] { 10, 20, 30, 49, 60 };
-        WriteLine($"{array[Algorithms.BinarySearch(array, 30, true)]} ");
+        WriteLine($"{array[Algorithms.BinarySearch(array, array[^2], true)]} ");
+    }
+}
+static public class Test
+{
+    [Flags]
+    enum my_enum
+    {
+        b = 1,
+        a = 2,
+        c = 4,
+        r = 8,
+    }
+
+    static public void Enum()
+    {
+        my_enum en = my_enum.b | my_enum.a;
+        en |= my_enum.r;
+        switch (en)
+        {
+            case my_enum.b:
+                WriteLine("IT'S b");
+                break;
+            case my_enum.a:
+                WriteLine("IT'S a");
+                break;
+            case my_enum.b | my_enum.a | my_enum.r:
+                WriteLine("IT'S b and a and r");
+                break;
+        }
     }
 }
