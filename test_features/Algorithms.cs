@@ -29,34 +29,37 @@ static class Algorithms
                 if (!is_change) break;
             }
         }
-        //static public T[] QuickSort<T>(T[] array) where T : IComparable<T>
-        //{
-        //    if (array.Length < 2) return array;
+        static public T[] QuickSort<T>(T[] array, int start, int end) where T : IComparable<T>
+        {
+            if (end - start + 1 < 2) return array;
 
-        //    T pivot = array[0];
-        //    //for (int index = 0; index < array.Length; index++)
-        //    //{
-        //    //    if (index == pivot) continue;
-        //    //    switch (array[pivot].CompareTo(array[index]))
-        //    //    {
-        //    //        case 1:
-        //    //            var temp = array[pivot];
-        //    //            array[pivot] = array[index];
-        //    //            pivot++;
-        //    //            array[index] = array[pivot];
-        //    //            array[pivot] = temp;
-        //    //            break;
-        //    //    }
-        //    //}
-        //    //T[] ArrayLess = new T[pivot - 1], ArrayLarge = new T[array.Length - pivot - 1];
-        //    array.Where(item => item switch
-        //    {
-        //        -1 or 0 => true,
-        //        1 => false,
-        //    }
-        //    );
-        //    return
-        //}
+            int pivot = start;
+            T temp;
+            for (int i = start + 1; i <= end; i++)
+            {
+                if (array[pivot].CompareTo(array[i]) == 1)
+                {
+                    if (pivot + 1 == i)
+                    {
+                        temp = array[pivot];
+                        array[pivot] = array[i];
+                        array[i] = temp;
+                    }
+                    else
+                    {
+                        temp = array[pivot + 1];
+                        array[pivot + 1] = array[pivot];
+                        array[pivot] = array[i];
+                        array[i] = temp;
+                    }
+                    pivot++;
+                }
+            }
+
+            QuickSort(array, start, pivot - 1);
+            QuickSort(array, pivot + 1, end);
+            return array;
+        }
     }
     static public int BinarySearch<T>(in T[] array, T target, bool debug = true) where T : IComparable<T>
     {
